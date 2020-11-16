@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "18202200276",
+    "firebase_url": "https://bitkneset.firebaseio.com",
+    "project_id": "bitkneset",
+    "storage_bucket": "bitkneset.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:18202200276:android:9b1804e875ebb956d91341",
+        "android_client_info": {
+          "package_name": "com.danik.bitkneset"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "18202200276-rjko9di37758ha9mosk2r6vbrml9atq5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.danik.bitkneset",
+            "certificate_hash": "fbe9fb7da98a2fc87608cf71f3d2fde7e1540990"
+          }
+        },
+        {
+          "client_id": "18202200276-ppu1hjlo4ncfhcpf1ia55p5kfo93rvf6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGJS4ekUenW1fM0tQ0v8jDIB_RDAzzk7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "18202200276-ppu1hjlo4ncfhcpf1ia55p5kfo93rvf6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

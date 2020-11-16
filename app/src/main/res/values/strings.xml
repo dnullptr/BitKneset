@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">BitKneset</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Bit-Kneset</string>
+    <string name="nav_header_subtitle">ניהול בית כנסת, חכם יותר</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_about">אודות המיזם</string>
+
+    <string name="menu_home">מסך בית</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">הודעות</string>
+    <string name="aliyotOrders">עליות/תרומות</string>
+    <string name="home_second">Home Second</string>
+    <string name="title_activity_login">התחברות</string>
+    <string name="prompt_email">מייל</string>
+    <string name="prompt_password">סיסמה</string>
+    <string name="action_sign_in">התחבר או הירשם</string>
+    <string name="action_sign_in_short">התחבר</string>
+    <string name="welcome">"ברוך הבא!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >6 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="newOrNah">אני משתמש חדש , רשום אותי</string>
+    <string name="loginSplash">היי חבר.. לפני שנמשיך אנא התחבר</string>
+    <string name="yourName">הכנס את שמך המלא</string>
+    <string name="hello_connected">שלום ,</string>
+    <string name="logout">התנתק</string>
+    <string name="aliyot">עליות</string>
+    <string name="aliyotAdmin">ניהול עליות</string>
+    <string name="fullname">שם מלא :</string>
+    <string name="desc">תיאור הזמנה :</string>
+    <string name="amount">סכום :</string>
+    <string name="date">תאריך :</string>
+    <string name="paid">שולם?</string>
+    <string name="submit">בצע</string>
+    <string name="onMyName">על שמי</string>
+    <string name="newOrder">תרומה/הזמנה חדשה</string>
+    <string name="knisa">כניסת השבת:</string>
+    <string name="yetsia">יציאת השבת:</string>
+    <string name="checking">בודק..</string>
+    <string-array name="order_types">
+        <item>עליה לתורה</item>
+        <item>הזמנת אירוע</item>
+        <item>תרומה עבור סעודה</item>
+        <item>כסא ישיבה</item>
+        <item>קניית ספרים</item>
+    </string-array>
+</resources>
