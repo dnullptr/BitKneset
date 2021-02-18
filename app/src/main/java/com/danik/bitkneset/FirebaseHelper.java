@@ -45,6 +45,7 @@ public class FirebaseHelper {
     public static FirebaseRetriever thisUser_fbr;
 
 
+
     public FirebaseHelper(final String path)
     {
         database = FirebaseDatabase.getInstance();
@@ -63,6 +64,7 @@ public class FirebaseHelper {
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     fromDBList.add((Map) data.getValue());
                     fromDB1List.add((Map) data.getValue());
+
                 }
                 Log.d(TAG, "onDataChange: DOWNLOADED ALL LISTS AND ARE READY");
                 orderDownloader=new Thread()
@@ -137,6 +139,7 @@ public class FirebaseHelper {
             return false;
         }
     }
+
 
 }
 

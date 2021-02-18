@@ -10,7 +10,8 @@ public class User implements Parcelable {
     String fullName;
     boolean Connected;
 
-    public User(String username, String password, int accessLevel, String fullName) {
+    public User(String username, String password, int accessLevel, String fullName) { //many c'tors for many cases.. this one or register
+                                                                                        // in which we will need to serve the fullname to the firebase DB.
         this.username = username;
         this.password = password;
         this.accessLevel = accessLevel;
@@ -23,6 +24,10 @@ public class User implements Parcelable {
         this.accessLevel = accessLevel;
     }
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     protected User(Parcel in) {
         username = in.readString();
@@ -80,7 +85,7 @@ public class User implements Parcelable {
 
     public boolean compareTo(User comp)
     {
-        return this.username.equals(comp.username) && this.password.equals(comp.password) && this.accessLevel==comp.accessLevel; //this func will help checking login with two "users" - one from DB and other claimed by user form
+        return this.username.equals(comp.username) && this.password.equals(comp.password); //this func will help checking login with two "users" - one from DB and other claimed by user form
         //if it's true , login is successful
     }
 

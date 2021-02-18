@@ -32,6 +32,8 @@ public class FirebaseRetriever {
     public List<Map<String,Boolean>> AliyotPaidList;
     public List<Map<String,String>> Aliyot;
     public List<Order> aliyot = new ArrayList<Order>();
+    public static List<String> orderKeyList = new ArrayList<String>();
+    public static float SumAllOrders = 0;
     public FirebaseRetriever(final String path)
     {
         database = FirebaseDatabase.getInstance();
@@ -44,6 +46,7 @@ public class FirebaseRetriever {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
+                SumAllOrders = 0;
                 fromDBList = new ArrayList<>();
 
 
@@ -57,7 +60,8 @@ public class FirebaseRetriever {
                     AliyotFloatList.add((Map) data.getValue());
                     AliyotPaidList.add((Map) data.getValue());
                     Aliyot.add((Map) data.getValue());
-
+                    Log.d(TAG, "OrderOnDataChangeKEYSTONE: "+data.getKey());
+                    orderKeyList.add(data.getKey());
 
                 }
                 Log.d(TAG, "FireBaseRetriever -> Downloaded FB Data!");
@@ -70,8 +74,10 @@ public class FirebaseRetriever {
 
                 for (int i = 0; i < fromDBList.size(); i++) {
                     Order temp = new Order(fromDBList.get(i).get("user"), fromDBList.get(i).get("type"),fromDBList.get(i).get("desc"), AliyotFloatList.get(i).get("amount"), AliyotPaidList.get(i).get("paid"),fromDBList.get(i).get("date") );
-                    Log.d(TAG, "getFullOrderList: " + temp.getUser() + " " + temp.getType() + " " + temp.isPaid() + " " + temp.getAmount() + " " + temp.getDate().toString());  //delete when ready
+                    Log.d(TAG, "getFullOrderList: " + temp.getUser() + " " + temp.getType() + " " + temp.isPaid() + " " + temp.getAmount() + " " + temp.getDate().toString());
                     aliyot.add(temp);
+                    SumAllOrders += AliyotFloatList.get(i).get("amount");
+
                 }
                 Log.d(TAG, "FireBaseRetriever -> Downloaded Aliyot List of Maps!");
             }
@@ -103,11 +109,46 @@ public class FirebaseRetriever {
             return false;
         }
     }
+    public static boolean updateOrderInDB(String keystone,Order order)
+    {
+        Log.d(TAG, "updateOrderInDB With Keystone: "+keystone);
+        DatabaseReference pathToUpdate=myRef.child(keystone);
+        if(orderKeyList.size()>0) {
+            pathToUpdate.setValue(order);
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean deleteOrderFromDB(String keystone)
+    {
+        Log.d(TAG, "deleteOrderFromDB With Keystone: "+keystone);
+        DatabaseReference pathToDelete=myRef.child(keystone);
+        if(orderKeyList.size()>0) {
+            pathToDelete.removeValue();
+            return true;
+        }
+
+        return false;
+    }
 
     public List<Order> getFullOrderList() {
         return aliyot;
     }
 
+    public List<Order> getFilteredUserOrderList(User me)
+    {
+        List<Order> fullOrderList = getFullOrderList();
+        List<Order> filteredList = new ArrayList<>();
+
+            String usernameFilter = me.getFullName();
+            for (Order o : fullOrderList) {
+                if ( o.getUser().contains(usernameFilter))
+                    filteredList.add(o);
+            }
+        return filteredList;
+    }
 
 }
 

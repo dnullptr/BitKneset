@@ -1,5 +1,7 @@
 package com.danik.bitkneset.ui.home;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -90,13 +93,38 @@ public class HomeFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String url="https://he.chabad.org/calendar/candlelighting.htm/locationid/871/locationtype/1";
+            String url="https://www.hidabroot.org/%D7%9B%D7%A0%D7%99%D7%A1%D7%AA-%D7%94%D7%A9%D7%91%D7%AA";
             try {
+
                 Document doc = Jsoup.connect(url).get();
-                Elements data = doc.select("#LocationData > div > div:nth-child(1) > div:nth-child(2) > h3 > span.time.extra_large.block");
+                Elements data = doc.select("#article_inner > div.cities_list > article:nth-child(3) > div:nth-child(2)");
                 AsyncKnisa = data.get(0).ownText();
-                data = doc.select("#LocationData > div > div:nth-child(1) > div:nth-child(4) > h3 > span.time.extra_large.block");
+                AsyncKnisa = AsyncKnisa.substring(AsyncKnisa.length()-5); //going from the end minus the length of time
+                //Log.d(TAG, "doInBackground: Knisa "+AsyncKnisa);
+                data = doc.select("#article_inner > div.cities_list > article:nth-child(3) > div:nth-child(3)");
                 AsyncYetsia = data.get(0).ownText();
+                AsyncYetsia = AsyncYetsia.substring(AsyncYetsia.length()-5); //going from the end minus the length of time
+                //Log.d(TAG, "doInBackground: Yetsia "+AsyncYetsia);
+
+
+               /* //Halaha Yomit Section
+                String urlHalaha = "http://halachayomit.co.il/he/default.aspx";
+                Document doc1 = Jsoup.connect(urlHalaha).get();
+                Elements data1 = doc1.select("#ctl00_ContentPlaceHolderMain_div_Mp3_2 > a");
+                String HalahaTitle = doc1.select("#ctl00_ContentPlaceHolderMain_lblHalachaTitle").get(0).ownText();
+                String HalahaYomit = data1.get(0).outerHtml();
+                String uriToMp3Yomit = "http://halachayomit.co.il/he/"+HalahaYomit.substring(9,37);
+
+
+                Log.d(TAG, "doInBackground: "+HalahaTitle+"\n"+ HalahaYomit + "\n"+uriToMp3Yomit);
+                MediaPlayer mediaPlayer2 = new MediaPlayer();
+                mediaPlayer2.setDataSource(uriToMp3Yomit);
+                mediaPlayer2.prepare();
+                mediaPlayer2.start();
+                */
+
+
+
 
             } catch (IOException e) {
                 Log.d(TAG, "doInBackground: "+ e);;

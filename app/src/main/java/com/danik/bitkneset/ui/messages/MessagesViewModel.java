@@ -1,16 +1,16 @@
-package com.danik.bitkneset.ui.slideshow;
+package com.danik.bitkneset.ui.messages;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class SlideshowViewModel extends ViewModel {
+public class MessagesViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public SlideshowViewModel() {
+    public MessagesViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is slideshow fragment");
+        mText.setValue("");
     }
 
     public LiveData<String> getText() {

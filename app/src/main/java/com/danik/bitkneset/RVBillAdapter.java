@@ -2,8 +2,6 @@ package com.danik.bitkneset;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,71 +17,70 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.danik.bitkneset.ui.aliyot.AliyotFragment;
+import com.danik.bitkneset.ui.bill.BillFragment;
 import com.danik.bitkneset.ui.login.LoginFragment;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implements Filterable {
+public class RVBillAdapter extends RecyclerView.Adapter<RVBillAdapter.ViewHolder> implements Filterable {
 
     Context context;
-    List<Order> aliyotArr;
-    List<Order> aliyotArrFull;
+    List<Bill> billArr;
+    List<Bill> billArrFull;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{ //viewholder is the single rv item , just in code.
-        TextView nameToRV;
+    public static class ViewHolder extends RecyclerView.ViewHolder{ //viewholder is the single bill item , just in code.
+        TextView typeToRV;
         TextView descToRV;
         TextView amountToRV;
         TextView dateToRV;
         ImageView isPaidPic;
         Button payUnpaidBtn;
-        ImageButton delOrderBtn;
+        ImageButton delBillBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameToRV=itemView.findViewById(R.id.nameToRV);
+            typeToRV=itemView.findViewById(R.id.typeToRV);
             descToRV=itemView.findViewById(R.id.descToRV);
             amountToRV=itemView.findViewById(R.id.amountToRV);
             dateToRV=itemView.findViewById(R.id.dateToRV);
             isPaidPic=itemView.findViewById(R.id.isPaidPic);
             payUnpaidBtn=itemView.findViewById(R.id.payUnpaidBtn);
-            delOrderBtn=itemView.findViewById(R.id.delOrderBtn);
+            delBillBtn=itemView.findViewById(R.id.delOrderBtn);
         }
 
     }
 
-    public RVAdapter(Context context, List<Order> aliyotArr) {
+    public RVBillAdapter(Context context, List<Bill> billArr) {
         this.context = context;
-        this.aliyotArr = aliyotArr;
-        this.aliyotArrFull = new ArrayList<>(aliyotArr);
+        this.billArr = billArr;
+        this.billArr = Toolbox.deDupeList((ArrayList<Bill>) this.billArr);
+        this.billArrFull = new ArrayList<>(billArr);
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public RVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RVBillAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater=LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.single_rv_item,parent,false);
+        View view = inflater.inflate(R.layout.single_bill_item,parent,false);
         ViewHolder viewHolder=new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RVAdapter.ViewHolder holder, final int position) {
-        holder.nameToRV.setText(aliyotArr.get(position).getUser());
-        holder.descToRV.setText(aliyotArr.get(position).getDesc() +" ("+aliyotArr.get(position).getType()+")");
-        holder.amountToRV.setText(String.valueOf(aliyotArr.get(position).getAmount()));
+    public void onBindViewHolder(@NonNull final RVBillAdapter.ViewHolder holder, final int position) {
+        holder.typeToRV.setText(billArr.get(position).getType());
+        holder.descToRV.setText(billArr.get(position).getDesc());
+        holder.amountToRV.setText(String.valueOf(billArr.get(position).getAmount()));
         //SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy"); //for later if i want to filter dates , it's gonna help me
-        holder.dateToRV.setText((aliyotArr.get(position).getDate()));
-        if(aliyotArr.get(position).isPaid()) holder.isPaidPic.setImageResource(R.drawable.truepic); else { holder.isPaidPic.setImageResource(R.drawable.falsepic); holder.payUnpaidBtn.setVisibility(View.VISIBLE);}
+        holder.dateToRV.setText((billArr.get(position).getDate()));
+        if(billArr.get(position).isPaid()) holder.isPaidPic.setImageResource(R.drawable.truepic); else { holder.isPaidPic.setImageResource(R.drawable.falsepic); holder.payUnpaidBtn.setVisibility(View.VISIBLE);}
         if(LoginFragment.user != null) //needed to avoid null when not yet connected
-            if(LoginFragment.user.getAccessLevel() == 2) holder.delOrderBtn.setVisibility(View.VISIBLE);
+            if(LoginFragment.user.getAccessLevel() == 2) holder.delBillBtn.setVisibility(View.VISIBLE);
 
-        holder.delOrderBtn.setOnClickListener(new View.OnClickListener() {
+        holder.delBillBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -91,22 +88,22 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                FirebaseHelper.thisUser_fbr.deleteOrderFromDB(FirebaseHelper.thisUser_fbr.orderKeyList.get(position));
-                                Log.d("SingletonDeleter", FirebaseHelper.thisUser_fbr.orderKeyList.get(position));
-                                //do deletion of order
-                                Snackbar.make(holder.itemView.getRootView(),"התרומה תימחק בשניות הקרובות!", Snackbar.LENGTH_LONG).show();
+                                FirebaseBiller.deleteBillFromDB(FirebaseBiller.billKeyList.get(position));
+                                Log.d("SingletonDeleterBills", FirebaseBiller.billKeyList.get(position));
+                                //do deletion
+                                Snackbar.make(holder.itemView.getRootView(),"החשבון יימחק בשניות הקרובות!", Snackbar.LENGTH_LONG).show();
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
-                                Log.d("DELORDADAPT", "onClick: Delete Failed of"+FirebaseHelper.thisUser_fbr.orderKeyList.get(position));
-                                Snackbar.make(holder.itemView.getRootView(),"התרומה לא נמחקה!", Snackbar.LENGTH_LONG).show();
+                                Log.d("DELBLLADAPT", "onClick: Delete Failed of"+FirebaseBiller.billKeyList.get(position));
+                                Snackbar.make(holder.itemView.getRootView(),"החשבון לא נמחק!", Snackbar.LENGTH_LONG).show();
                                 break;
                         }
                     }
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext()); //comes before onCLick dialog above,
-                builder.setMessage("אזהרת מנהל, האם בטוח שברצונך למחוק את התרומה?").setPositiveButton("כן", dialogClickListener)
+                builder.setMessage("אזהרת מנהל, האם בטוח שברצונך למחוק את רשומת החשבון?").setPositiveButton("כן", dialogClickListener)
                         .setNegativeButton("לא", dialogClickListener).show();
 
             }
@@ -120,22 +117,22 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                FirebaseHelper.thisUser_fbr.aliyot.get(position).setPaid(true);
-                                FirebaseHelper.thisUser_fbr.updateOrderInDB(FirebaseHelper.thisUser_fbr.orderKeyList.get(position),FirebaseHelper.thisUser_fbr.aliyot.get(position));
-                                Log.d("SingletonUpdater", FirebaseHelper.thisUser_fbr.orderKeyList.get(position));
-                                Snackbar.make(holder.itemView.getRootView(),"התרומה תתעדכן בשניות הקרובות!", Snackbar.LENGTH_LONG).show();
+                                FirebaseBiller.billsList.get(position).setPaid(true);
+                                FirebaseBiller.updateBillInDB(FirebaseBiller.billKeyList.get(position),FirebaseBiller.billsList.get(position));
+                                Log.d("SingletonUpdater", FirebaseBiller.billKeyList.get(position));
+                                Snackbar.make(holder.itemView.getRootView(),"החשבון תתעדכן בשניות הקרובות!", Snackbar.LENGTH_LONG).show();
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
-                                Log.d("SingletonUpdater", "onClick: Update Failed of"+FirebaseHelper.thisUser_fbr.orderKeyList.get(position));
-                                Snackbar.make(holder.itemView.getRootView(),"התרומה לא עודכנה עדיין..", Snackbar.LENGTH_LONG).show();
+                                Log.d("SingletonUpdater", "onClick: Update Failed of"+FirebaseBiller.billKeyList.get(position));
+                                Snackbar.make(holder.itemView.getRootView(),"החשבון לא עודכנה עדיין..", Snackbar.LENGTH_LONG).show();
                                 break;
                         }
                     }
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext()); //comes before onCLick dialog above,
-                builder.setMessage("אזהרת מנהל, האם אתה בטוח שהזמנה זו שולמה?").setPositiveButton("כן", dialogClickListener)
+                builder.setMessage("אזהרת מנהל, האם אתה בטוח שחשבון זה שולם?").setPositiveButton("כן", dialogClickListener)
                         .setNegativeButton("לא", dialogClickListener).show();
             }
         });
@@ -143,7 +140,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
 
     @Override
     public int getItemCount() {
-        return aliyotArr.size();
+        return billArr.size();
     }
 
     @Override
@@ -151,16 +148,20 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
         return exampleFilter;
     }
     private Filter exampleFilter = new Filter() {
+        float sumBillsFiltered = 0;
         @Override
         protected FilterResults performFiltering(CharSequence constraint) { //perform filter bafoal live with new regenerating lists that fit constraint string
-            List<Order> filteredList = new ArrayList<>();
+            List<Bill> filteredList = new ArrayList<>();
             if (constraint == null || constraint.length() == 0)
-                filteredList.addAll(aliyotArrFull);
+                filteredList.addAll(billArrFull);
             else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
-                for (Order o : aliyotArrFull) {
-                    if (o.getDate().contains(filterPattern) || o.getDesc().contains(filterPattern) || o.getType().contains(filterPattern) || o.getUser().contains(filterPattern))
-                        filteredList.add(o);
+                for (Bill b : billArrFull) {
+                    Log.d("TAG", "performFiltering: "+b.getType()+" filPattern "+filterPattern);
+                    if (b.getDate().contains(filterPattern) || b.getDesc().contains(filterPattern) || b.getType().contains(filterPattern) || b.getAmount().contains(filterPattern)) {
+                        filteredList.add(b);
+                        sumBillsFiltered += Float.parseFloat(b.getAmount()); //sum on filter section
+                    }
                 }
             }
             FilterResults filteredResults = new FilterResults();
@@ -170,8 +171,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> implem
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            aliyotArr.clear();
-            aliyotArr.addAll((ArrayList)results.values);
+            billArr.clear();
+            billArr.addAll((ArrayList)results.values);
+            FirebaseBiller.SumAllBills=sumBillsFiltered; //sum on filter section
             notifyDataSetChanged();
         }
     };

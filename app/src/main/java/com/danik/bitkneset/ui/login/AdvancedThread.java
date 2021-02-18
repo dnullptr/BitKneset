@@ -2,7 +2,6 @@ package com.danik.bitkneset.ui.login;
 
 public class AdvancedThread extends Thread {
     String username,password;
-    int accessLevel;
 
 public AdvancedThread(String username,String password)
     {

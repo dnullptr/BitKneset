@@ -1,8 +1,10 @@
 package com.danik.bitkneset.ui.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -32,17 +34,20 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.danik.bitkneset.FirebaseHelper;
+import com.danik.bitkneset.MainActivity;
 import com.danik.bitkneset.R;
+import com.danik.bitkneset.RecoveryEngine;
 import com.danik.bitkneset.User;
 import com.danik.bitkneset.ui.home.HomeFragment;
 
 
-import static android.content.ContentValues.TAG;
 
 public class LoginFragment extends Fragment {
     private LoginViewModel loginViewModel;
     public static User user;
-    public static CheckBox loginOrRegister;
+    public static CheckBox loginOrRegister; // needed outside the class for register mode since I want to retrieve the fullname too without changing login function.
+    public static EditText fullNameText; //needed outside the class for register mode too from the same reason..
+    public static Context context;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -57,8 +62,9 @@ public class LoginFragment extends Fragment {
         final Button loginButton = root.findViewById(R.id.login);
         final ProgressBar loadingProgressBar = root.findViewById(R.id.loading);
         loginOrRegister = root.findViewById(R.id.checkBox);
-        final EditText fullNameText = root.findViewById(R.id.fullNameText);
+        fullNameText = root.findViewById(R.id.fullNameText);
         final TextView connectedWelcome = root.findViewById(R.id.connectedWelcome);
+        final CheckBox rememberMePassword = root.findViewById(R.id.rememberMe);
         Button logout=root.findViewById(R.id.logout);
         //SET TO VISIBLE ALL , logout INVISIBLE
         textView.setVisibility(View.VISIBLE);
@@ -68,6 +74,15 @@ public class LoginFragment extends Fragment {
         logout.setVisibility(View.INVISIBLE);
         splash.setVisibility(View.VISIBLE);
         connectedWelcome.setVisibility(View.INVISIBLE);
+        context = getContext();
+
+        final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE); //GET LAST USER LOGIN FROM SHR_PRF IF EXISTED
+        if(sharedPref.getString("savedLastUser","").length()>0) //CHECK LAST USER SAVED
+            usernameEditText.setText(sharedPref.getString("savedLastUser",""));
+        if(sharedPref.getBoolean("savedLastPassChkBox",false)) //CHECK IF CHKBOX AND RETRIEVE
+            rememberMePassword.setChecked(sharedPref.getBoolean("savedLastPassChkBox",false));
+        if(sharedPref.getString("savedLastPass","").length()>0 && sharedPref.getBoolean("savedLastPassChkBox",false)) //CHECK IF LAST PASS WAS SAVED AND RETRIEVE
+            passwordEditText.setText(sharedPref.getString("savedLastPass",""));
 
         if (user == null) {
 
@@ -98,8 +113,17 @@ public class LoginFragment extends Fragment {
                         Toast.makeText(getContext(), "סיסמה שגויה או לא רשום במערכת!", Toast.LENGTH_SHORT).show();
                     }
                     if (loginResult.getSuccess() != null) { //if success property is used , we succeeded and BTW error property is null instead.
-                        Toast.makeText(getContext(), "התחברת בהצלחה כמשתמש רגיל!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "התחברת בהצלחה!", Toast.LENGTH_SHORT).show();
                         getFragmentManager().beginTransaction().detach(LoginFragment.this).attach(LoginFragment.this).commit();
+                        if(LoginFragment.user !=null){
+                        if(LoginFragment.user.getAccessLevel()==2)
+                        Toast.makeText(getContext(), "למשתמש זה הרשאות מנהל :)", Toast.LENGTH_SHORT).show();}
+                        SharedPreferences.Editor editor = sharedPref.edit(); //SAVE LASTUSER TO SHARED PREF
+                        editor.putString("savedLastUser",usernameEditText.getText().toString());
+                        if(rememberMePassword.isChecked())
+                        editor.putString("savedLastPass",passwordEditText.getText().toString());
+                        editor.putBoolean("savedLastPassChkBox",rememberMePassword.isChecked()); //PUT BOOLEAN CHKBOX STATE TO MEMORY REGARDLESS OF IF CHECKED
+                        editor.apply();
                     }
 
 
@@ -135,7 +159,7 @@ public class LoginFragment extends Fragment {
                         try {
                             loginViewModel.login(usernameEditText.getText().toString(),
                                     passwordEditText.getText().toString());
-                            loadingProgressBar.setVisibility(View.VISIBLE); //show that we're doing stuff
+                            loadingProgressBar.setVisibility(View.VISIBLE); //show that we're doing stuff , it's loading with animation
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -158,7 +182,7 @@ public class LoginFragment extends Fragment {
                     loginButton.setOnClickListener(new View.OnClickListener() {  //Login Or Register part of code
                         @Override
                         public void onClick(View v) {
-                            FirebaseHelper fbh = new FirebaseHelper("Users");
+                            FirebaseHelper fbh = new FirebaseHelper("Users"); // calling the singletons this early on code will make the DB ready a lot sooner , even if not used directly now.
                             loadingProgressBar.setVisibility(View.VISIBLE); //show that we are thinking :)
                             try {
                                 loginViewModel.login(usernameEditText.getText().toString(),
@@ -214,6 +238,15 @@ public class LoginFragment extends Fragment {
                 }
             });
         }
+
+        TextView iForgotMyPassword = root.findViewById(R.id.iForgotMyPassLbl);
+        iForgotMyPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(),RecoveryEngine.class);
+                startActivity(i);
+            }
+        });
 
             loginViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
                 @Override

@@ -1,15 +1,18 @@
-package com.danik.bitkneset.ui.aliyot;
+package com.danik.bitkneset.ui.bill;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -18,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -28,17 +32,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.danik.bitkneset.Bill;
+import com.danik.bitkneset.FirebaseBiller;
 import com.danik.bitkneset.FirebaseHelper;
 import com.danik.bitkneset.FirebaseRetriever;
 import com.danik.bitkneset.Order;
 import com.danik.bitkneset.R;
 import com.danik.bitkneset.RVAdapter;
+import com.danik.bitkneset.RVBillAdapter;
 import com.danik.bitkneset.TrumahEngine;
 import com.danik.bitkneset.ui.login.LoginFragment;
 
@@ -52,47 +60,90 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-public class AliyotFragment extends Fragment {
+public class BillFragment extends Fragment {
 
-    private AliyotViewModel aliyotViewModel;
+    private BillViewModel billViewModel;
     Button submitBtn;
     Spinner spinner;
-    String selectedType; //spinner and a type to hold its selection
+    String selectedType; //spinner and a type to hold its selection like i did with Aliyot
     Switch sw;
     EditText desc, amount, date;
-    Order[] aliyot;
     RecyclerView rv;
     RecyclerView.Adapter rvAdapter;
     RecyclerView.LayoutManager layoutManager;
-    ProgressBar progressBarAliyot;
-    final FirebaseHelper fbh = new FirebaseHelper("Orders"); //get fbh instance of orders or "aliyot" as i like to call them :)
+    ProgressBar progressBarBill;
+    TextView income,outcome;
+    final FirebaseBiller fbl = new FirebaseBiller("Bills"); //get fbl instance of bills
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        aliyotViewModel =
-                ViewModelProviders.of(this).get(AliyotViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_aliyot, container, false);
+        billViewModel =
+                ViewModelProviders.of(this).get(BillViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_bill, container, false);
+        if(LoginFragment.user == null || (LoginFragment.user != null && LoginFragment.user.getAccessLevel() == 1)) //if normal user, inflate without panel
+            root = inflater.inflate(R.layout.fragment_bill_dupe, container, false);
         final TextView textView = root.findViewById(R.id.text_gallery);
-        aliyotViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        billViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
         });
-        desc = root.findViewById(R.id.desc);
-        amount = root.findViewById(R.id.amount);
-        date = root.findViewById(R.id.date);
-        sw = root.findViewById(R.id.switch1);
-        spinner = root.findViewById(R.id.spinner);
-        submitBtn = root.findViewById(R.id.submitOrder);
-        progressBarAliyot = root.findViewById(R.id.progressBarAliyot);
+        desc = root.findViewById(R.id.descBill);
+        amount = root.findViewById(R.id.amountBill);
+        date = root.findViewById(R.id.dateBill);
+        sw = root.findViewById(R.id.switchBill);
+        spinner = root.findViewById(R.id.spinnerBill);
+        submitBtn = root.findViewById(R.id.submitBill);
+        progressBarBill = root.findViewById(R.id.progressBarBill);
+        rv = root.findViewById(R.id.rvBill);
+        income = root.findViewById(R.id.balIn);
+        outcome = root.findViewById(R.id.balOut);
         setHasOptionsMenu(true);
 
-        if (LoginFragment.user != null)
-            if (LoginFragment.user.getAccessLevel() == 2) //if admin -> give the switch as an option
+
+        if (LoginFragment.user != null){
+            if (LoginFragment.user.getAccessLevel() == 2){ //if admin -> give the switch as an option
                 sw.setVisibility(View.VISIBLE);
-            else sw.setVisibility(View.INVISIBLE);
+                desc.setVisibility(View.VISIBLE);
+                amount.setVisibility(View.VISIBLE);
+                date.setVisibility(View.VISIBLE);
+                sw.setVisibility(View.GONE);
+                spinner.setVisibility(View.VISIBLE);
+                submitBtn.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                sw.setVisibility(View.INVISIBLE);
+                sw.setVisibility(View.GONE);
+                desc.setVisibility(View.GONE);
+                amount.setVisibility(View.GONE);
+                date.setVisibility(View.GONE);
+                sw.setVisibility(View.GONE);
+                spinner.setVisibility(View.GONE);
+                submitBtn.setVisibility(View.GONE);
+                //ViewGroup.LayoutParams params=rv.getLayoutParams();
+                //params.height+=100;
+                // rv.setLayoutParams(params);
+                ((ConstraintLayout)root.findViewById(R.id.linearLayout2)).setVisibility(View.GONE);
+
+            }
+        }
+        else //must me 'else' here to invoke case of null along with not null but not admin
+        {
+            sw.setVisibility(View.INVISIBLE);
+            sw.setVisibility(View.GONE);
+            desc.setVisibility(View.GONE);
+            amount.setVisibility(View.GONE);
+            date.setVisibility(View.GONE);
+            sw.setVisibility(View.GONE);
+            spinner.setVisibility(View.GONE);
+            submitBtn.setVisibility(View.GONE);
+            ((ConstraintLayout)root.findViewById(R.id.linearLayout2)).setVisibility(View.GONE);
+        }
+
 
         /////////////////////SPINNER/////////////////////
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @SuppressLint("ResourceType")
             @Override
@@ -116,11 +167,11 @@ public class AliyotFragment extends Fragment {
                     return;
                 }
                 if (desc.getText().length() < 1) {
-                    Toast.makeText(getContext(), "תיאור ההזמנה ריק", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "תיאור החשבון ריק", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (amount.getText().length() < 1) {
-                    Toast.makeText(getContext(), "סכום ההזמנה אינו תקין", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "סכום החשבון אינו תקין", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (date.getText().length() < 1) {
@@ -128,59 +179,71 @@ public class AliyotFragment extends Fragment {
                     return;
                 }
                 if (selectedType.length() < 1) {
-                    Toast.makeText(getContext(), "לא בחרת סוג הזמנה, אנא בחר אותו מהרשימה כעת כדי שנוכל להתקדם", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "לא בחרת סוג חשבון לתיעוד, אנא בחר אותו מהרשימה כעת כדי שנוכל להתקדם", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) { //here i do payment and order insertion
+                    public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                TrumahPayAsync trumahPayAsync = new TrumahPayAsync();
-                                trumahPayAsync.execute();
+                                Bill toPush = new Bill(selectedType,desc.getText().toString(),amount.getText().toString(),true,date.getText().toString());
+                                fbl.pushBillToDB(toPush);
 
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
-                                Toast.makeText(getContext(), "לא בוצעה ההזמנה , טרם חוייבת (אך טרם זכית במצווה :D)", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "לבקשתך, לא בוצע תיעוד החשבון עדיין.", Toast.LENGTH_LONG).show();
                                 break;
                         }
                     }
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("אתה בטוח שברצונך לשלם? תועבר לעמוד האשראי").setPositiveButton("כן", dialogClickListener)
+                builder.setMessage("אתה בטוח שברצונך לתעד חשבון זה?").setPositiveButton("כן", dialogClickListener)
                         .setNegativeButton("רק רגע..", dialogClickListener).show();
 
             }
         });
 
-        spinner.setAdapter(new ArrayAdapter<String>(root.getContext(), R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.order_types)));
+        spinner.setAdapter(new ArrayAdapter<String>(root.getContext(), R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.bill_types)));
 
 
-        progressBarAliyot.setVisibility(View.VISIBLE);
-        progressBarAliyot.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
-        rv = root.findViewById(R.id.rvAliyot);
-        List<Order> placeboList = new ArrayList<>();
-        placeboList.add(new Order("Username", "Truma", "Filler", (float) 45.5, false, "20/07/1990"));
-        final RVAdapter rvAdapter;
-        if (fbh.thisUser_fbr != null && LoginFragment.user != null) {
-            if (LoginFragment.user.getAccessLevel() == 2)
-                rvAdapter = new RVAdapter(getContext(), fbh.thisUser_fbr.getFullOrderList());  //FULL LIST FOR ADMIN
-            else
-                rvAdapter = new RVAdapter(getContext(), fbh.thisUser_fbr.getFilteredUserOrderList(LoginFragment.user)); //FILTERED LIST FOR NORMAL USER
-        }
-        else
-            rvAdapter = new RVAdapter(getContext(), placeboList);
+        progressBarBill.setVisibility(View.VISIBLE);
+        progressBarBill.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(root.getContext());
-        rv.setLayoutManager(layoutManager);
-        rv.setHasFixedSize(true);
+        final List<Bill> placeboList = new ArrayList<>();
+        //placeboList.add(new Bill("חשמל","תשלום חוב עבור סוכות","550",true,"15/02/2021"));
+        final RVBillAdapter[] rvAdapter = new RVBillAdapter[1];
 
-        rv.setAdapter(rvAdapter);
-        progressBarAliyot.setVisibility(View.INVISIBLE);
-        progressBarAliyot.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out));
+
+        rv.setAdapter(rvAdapter[0]);
+        progressBarBill.setVisibility(View.INVISIBLE);
+        progressBarBill.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out));
+
+        Handler h = new Handler(); //using handler to choreographically fix time events (sorry for the long adverb :D)
+        final View finalRoot = root;
+        h.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                outcome.setText(String.valueOf(FirebaseBiller.SumAllBills));
+                income.setText(String.valueOf(FirebaseHelper.thisUser_fbr.SumAllOrders));
+                if (LoginFragment.user != null) {
+                    rvAdapter[0] = new RVBillAdapter(getContext(), fbl.pullBillsFromDB());  //FULL LIST FOR ADMIN
+                }
+                else
+                    rvAdapter[0] = new RVBillAdapter(getContext(), placeboList);
+
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(finalRoot.getContext());
+                rv.setLayoutManager(layoutManager);
+                rv.setHasFixedSize(true);
+                rv.setAdapter(rvAdapter[0]);
+                Log.d(TAG, "run: Handler");
+
+            }
+        },1000);
+
 
         //////////SWITCH ADMIN OR NORMAL////////////////////
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -189,18 +252,18 @@ public class AliyotFragment extends Fragment {
                 // true if the switch is in the On position
                 if (isChecked) //download orders of all
                 {
-                    rvAdapter.getFilter().filter("");
+                    rvAdapter[0].getFilter().filter("");
                     sw.setText(sw.getTextOn());
                 } else //download my orders
                 {
-                    rvAdapter.getFilter().filter(LoginFragment.user.getFullName());
+                    rvAdapter[0].getFilter().filter(LoginFragment.user.getFullName());
                     sw.setText(sw.getTextOff());
                 }
             }
         });
 
         ///////////FROM HERE I DO FILTER SEARCH , WILL TRY TO MAKE IT GENERIC AS POSSIBLE ////////
-        SearchView searchView = root.findViewById(R.id.searchView);
+        SearchView searchView = root.findViewById(R.id.searchViewBill);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -210,7 +273,8 @@ public class AliyotFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                rvAdapter.getFilter().filter(newText);
+                rvAdapter[0].getFilter().filter(newText);
+
                 return false;
             }
         });
@@ -234,7 +298,7 @@ public class AliyotFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(rvAdapter != null)
-                ((RVAdapter) rvAdapter).getFilter().filter(newText);
+                    ((RVAdapter) rvAdapter).getFilter().filter(newText);
                 return false;
             }
         });
@@ -242,7 +306,7 @@ public class AliyotFragment extends Fragment {
 
 
     private class TrumahPayAsync extends AsyncTask<Void,Void,Void> {
-        final Intent trumahInstance = new Intent(AliyotFragment.super.getActivity(),TrumahEngine.class);
+        final Intent trumahInstance = new Intent(BillFragment.super.getActivity(),TrumahEngine.class);
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

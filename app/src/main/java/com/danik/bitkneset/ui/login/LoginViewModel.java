@@ -11,6 +11,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
+
 import com.danik.bitkneset.FirebaseHelper;
 import com.danik.bitkneset.R;
 import com.danik.bitkneset.User;
@@ -98,14 +99,16 @@ public class LoginViewModel extends ViewModel {
         //Result<LoggedInUser> result = loginRepository.login(username, password);
         if (LoginFragment.loginOrRegister.isChecked()) //register mode
         {
-            if (fbh.registerUser(new User(username, password, 1))) {
-                Toast.makeText(null, "הרשמה הצליחה , מעכשיו אתה חבר", Toast.LENGTH_LONG).show();
+            User toRegister = new User(username, password,1,LoginFragment.fullNameText.getText().toString());
+            if (fbh.registerUser(toRegister)) {
+                Toast.makeText(LoginFragment.context, "הרשמה הצליחה , מעכשיו אתה חבר", Toast.LENGTH_LONG).show();
+                LoginFragment.user = toRegister;
             } else
-                Toast.makeText(null, "משהו קרה בהרשמה..והיא לא הצליחה", Toast.LENGTH_LONG).show();
+                Toast.makeText(null, "משהו קרה בהרשמה..והיא לא הצליחה, יכול להיות משתמש כבר רשום", Toast.LENGTH_LONG).show();
 
         } else //login mode
         {
-                    toCheck = new User(username, password, 1);
+                    toCheck = new User(username, password);
 
                     fireLoginThread=new AdvancedThread(username,password){
                         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -120,8 +123,16 @@ public class LoginViewModel extends ViewModel {
 
 
 
+        try {
+            if(fireLoginThread != null)
+                fireLoginThread.join(); //throws interrupted reason
+        }
+        catch(Exception e)
+        {
+            Log.d(TAG, "login: failed on joining thread with "+e);
+        }
 
-        fireLoginThread.join(); //throws interrupted reason
+
         Log.d(TAG, "login: inb4 if accesstoreturn is :"+accessToReturn);
         if (accessToReturn==1 || accessToReturn==2) {
 

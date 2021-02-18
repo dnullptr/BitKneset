@@ -7,9 +7,12 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_about">אודות המיזם</string>
 
+    <string name="channel_name">ביט-כנסת</string>
+    <string name="channel_description">בית הכנסת שלך, רק חכם יותר</string>
     <string name="menu_home">מסך בית</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">הודעות</string>
+    <string name="menu_aliyot">עליות ותרומות</string>
+    <string name="menu_messages">הודעות</string>
+    <string name="menu_bill">חשבונות</string>
     <string name="aliyotOrders">עליות/תרומות</string>
     <string name="home_second">Home Second</string>
     <string name="title_activity_login">התחברות</string>
@@ -39,6 +42,25 @@
     <string name="knisa">כניסת השבת:</string>
     <string name="yetsia">יציאת השבת:</string>
     <string name="checking">בודק..</string>
+    <string name="rememberMe">זכור את הסיסמה שלי</string>
+    <string name="from">מאת :</string>
+    <string name="msg">הודעה :</string>
+    <string name="newMsg">הקלד הודעה חדשה לחבר\'ה :</string>
+    <string name="deletionMode">מצב מחיקה</string>
+    <string name="forMutav">עבור :</string>
+    <string name="cardNumber">מספר כרטיס :</string>
+    <string name="amountForCard">על סך :</string>
+    <string name="recV">מקבל..</string>
+    <string name="expiry">תוקף :</string>
+    <string name="cvv">ספרות בטיחות:</string>
+    <string name="cardDetails">פרטי אשראי</string>
+    <string name="trumahInfo">מנוע התשלום - תרומה(הדמיה , ללא תשלום)</string>
+    <string name="pay">שלם</string>
+    <string name="descBill">תיאור החשבון :</string>
+    <string name="addedBy">נוסף ע"י :</string>
+    <string name="billType">סוג החשבון :</string>
+    <string name="outcome">הוצאות :</string>
+    <string name="income">הכנסות :</string>
     <string-array name="order_types">
         <item>עליה לתורה</item>
         <item>הזמנת אירוע</item>
@@ -46,4 +68,22 @@
         <item>כסא ישיבה</item>
         <item>קניית ספרים</item>
     </string-array>
+    <string-array name="bill_types">
+        <item>חשמל</item>
+        <item>מים</item>
+        <item>נקיון</item>
+        <item>סעודות</item>
+        <item>ספרים</item>
+    </string-array>
+    <string name="title_activity_recovery_engine">RecoveryEngine</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="forgotQst">שכחת את הסיסמה? נעזור לך</string>
+    <string name="forgotMyPassword">שכחתי את הסיסמא</string>
 </resources>

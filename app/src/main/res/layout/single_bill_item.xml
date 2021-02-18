@@ -9,10 +9,10 @@
 
     <TextView
         android:id="@+id/nameLbl"
-        android:layout_width="66dp"
+        android:layout_width="77dp"
         android:layout_height="20dp"
         android:layout_marginStart="4dp"
-        android:text="@string/fullname"
+        android:text="@string/billType"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,7 +22,7 @@
         android:layout_height="20dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:text="@string/desc"
+        android:text="@string/descBill"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameLbl" />
 
@@ -47,10 +47,10 @@
         app:layout_constraintTop_toBottomOf="@+id/amountLbl" />
 
     <TextView
-        android:id="@+id/nameToRV"
+        android:id="@+id/typeToRV"
         android:layout_width="152dp"
         android:layout_height="20dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="20dp"
         android:text="טקסט"
         app:layout_constraintStart_toEndOf="@+id/nameLbl"
         app:layout_constraintTop_toTopOf="parent" />
@@ -105,7 +105,7 @@
         android:text="@string/paid"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.653"
-        app:layout_constraintStart_toEndOf="@+id/nameToRV"
+        app:layout_constraintStart_toEndOf="@+id/typeToRV"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button

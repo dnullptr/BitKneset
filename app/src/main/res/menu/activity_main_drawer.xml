@@ -9,16 +9,27 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_aliyot"
             android:icon="@drawable/donatemancolor"
             android:title="@string/aliyot" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:id="@+id/nav_messages"
+            android:icon="@drawable/msgs"
+            android:title="@string/menu_messages" />
+        <item
+            android:id="@+id/nav_bill"
+            android:icon="@drawable/bill"
+            android:title="@string/menu_bill" />
+
+        <item
+            android:id="@+id/nav_player"
+            android:icon="@drawable/playicon"
+            android:title="נגן הלכה יומית" />
+
         <item
             android:id="@+id/login_win"
             android:icon="@drawable/loginman"
             android:title="@string/title_activity_login" />
+
     </group>
 </menu>

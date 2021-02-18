@@ -24,7 +24,7 @@
         app:layout_constraintVertical_bias="0.011" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvAliyot"
+        android:id="@+id/rvBill"
         android:layout_width="400dp"
         android:layout_height="427dp"
         android:layout_marginStart="1dp"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/switchBill"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -54,62 +54,33 @@
         android:layout_width="409dp"
         android:layout_height="213dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/rvAliyot"
+        app:layout_constraintBottom_toTopOf="@+id/rvBill"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch1">
+        app:layout_constraintTop_toBottomOf="@+id/switchBill">
 
         <TextView
-            android:id="@+id/descLbl2"
+            android:id="@+id/typeBillLbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="76dp"
-            android:text="@string/desc"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/typeLbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:text="סוג ההזמנה :"
+            android:text="חשבון מסוג :"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/amountLbl2"
+            android:id="@+id/billTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="136dp"
-            android:text="@string/amount"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/dateLbl2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="@string/date"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/newOrder"
+            android:text="דיווח חשבון חדש"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/submitOrder"
+            android:id="@+id/submitBill"
             android:layout_width="88dp"
             android:layout_height="44dp"
             android:layout_marginBottom="12dp"
@@ -120,7 +91,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
-            android:id="@+id/date"
+            android:id="@+id/dateBill"
             android:layout_width="110dp"
             android:layout_height="42dp"
             android:layout_marginStart="12dp"
@@ -130,45 +101,77 @@
             android:inputType="date"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.094"
+            app:layout_constraintHorizontal_bias="0.098"
             app:layout_constraintStart_toEndOf="@+id/dateLbl2" />
 
+        <TextView
+            android:id="@+id/dateLbl2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="12dp"
+            android:text="@string/date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <EditText
-            android:id="@+id/desc"
-            android:layout_width="262dp"
-            android:layout_height="53dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="100dp"
+            android:id="@+id/descBill"
+            android:layout_width="210dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="92dp"
             android:ems="10"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/descLbl2" />
+            app:layout_constraintStart_toEndOf="@+id/descBillLbl2" />
+
+        <TextView
+            android:id="@+id/descBillLbl2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="84dp"
+            android:text="תיאור במילים :"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="309dp"
+            android:id="@+id/spinnerBill"
+            android:layout_width="259dp"
             android:layout_height="34dp"
             android:layout_marginStart="4dp"
             android:layout_marginBottom="160dp"
+            android:entries="@array/bill_types"
+            android:spinnerMode="dropdown"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.294"
-            app:layout_constraintStart_toEndOf="@+id/typeLbl" />
+            app:layout_constraintHorizontal_bias="0.176"
+            app:layout_constraintStart_toEndOf="@+id/typeBillLbl" />
 
         <EditText
-            android:id="@+id/amount"
+            android:id="@+id/amountBill"
             android:layout_width="115dp"
             android:layout_height="39dp"
-            android:layout_marginStart="76dp"
+            android:layout_marginStart="80dp"
             android:layout_marginTop="128dp"
             android:ems="10"
             android:inputType="number"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/amountLbl2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="136dp"
+            android:text="@string/amount"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
-        android:id="@+id/progressBarAliyot"
+        android:id="@+id/progressBarBill"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -180,13 +183,58 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <SearchView
-        android:id="@+id/searchView"
+        android:id="@+id/searchViewBill"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="56dp"
         android:queryHint="הקלד כאן מחרוזת לפילטור"
         android:searchIcon="@drawable/ic_search"
-        app:layout_constraintBottom_toBottomOf="@+id/rvAliyot"
+        app:layout_constraintBottom_toBottomOf="@+id/rvBill"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/balOutLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/outcome"
+        android:textColor="@color/design_default_color_primary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/balOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="28dp"
+        android:text="0"
+        android:textColor="@color/design_default_color_error"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/balIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="48dp"
+        android:text="0"
+        android:textColor="@android:color/holo_green_light"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/balInLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="48dp"
+        android:text="@string/income"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
