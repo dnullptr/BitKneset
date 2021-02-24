@@ -2,17 +2,13 @@ package com.danik.bitkneset.ui.bill;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -21,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -42,19 +37,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.danik.bitkneset.Bill;
 import com.danik.bitkneset.FirebaseBiller;
 import com.danik.bitkneset.FirebaseHelper;
-import com.danik.bitkneset.FirebaseRetriever;
-import com.danik.bitkneset.Order;
 import com.danik.bitkneset.R;
 import com.danik.bitkneset.RVAdapter;
 import com.danik.bitkneset.RVBillAdapter;
-import com.danik.bitkneset.TrumahEngine;
 import com.danik.bitkneset.ui.login.LoginFragment;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -302,38 +289,6 @@ public class BillFragment extends Fragment {
                 return false;
             }
         });
-    }
-
-
-    private class TrumahPayAsync extends AsyncTask<Void,Void,Void> {
-        final Intent trumahInstance = new Intent(BillFragment.super.getActivity(),TrumahEngine.class);
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            trumahInstance.putExtra("mutav",desc.getText().toString()); //push to payment "trumah" engine
-            trumahInstance.putExtra("zuzim",Float.parseFloat(amount.getText().toString()));
-            Order order = new Order(LoginFragment.user.getFullName(), selectedType, desc.getText().toString(), Float.parseFloat(amount.getText().toString()), true, date.getText().toString());
-            trumahInstance.putExtra("pendingOrder",order); //MUST IMPLEMENT PARCELABLE TO SEND OBJECT!
-            startActivityForResult(trumahInstance,-1);
-
-
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            onActivityResult(-1,-1,trumahInstance);
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
-        }
     }
 }
 

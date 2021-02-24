@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.danik.bitkneset.ui.bill.BillFragment;
 import com.danik.bitkneset.ui.login.LoginFragment;
 import com.google.android.material.snackbar.Snackbar;
 

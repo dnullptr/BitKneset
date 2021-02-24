@@ -1,8 +1,5 @@
 package com.danik.bitkneset;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +10,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.danik.bitkneset.ui.aliyot.AliyotFragment;
-import com.google.android.material.snackbar.Snackbar;
 
 public class TrumahEngine extends AppCompatActivity {
     public static Intent trumahInstance;
@@ -60,7 +59,7 @@ public class TrumahEngine extends AppCompatActivity {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
 
-                                    ////HERE COMES CODE OF CHANGING THE PAYMENT TO V IN FIREBASE TODOTODOBOMMMM
+                                    ////HERE COMES CODE OF CHANGING THE PAYMENT TO V IN FIREBASE
                                     Order pending = (Order) intent.getParcelableExtra("pendingOrder");
                                     pending.setPaid(false);
                                     Log.d("TrumahEngine", "isParcelOkay?: "+pending.getUser()+" "+pending.getDesc());

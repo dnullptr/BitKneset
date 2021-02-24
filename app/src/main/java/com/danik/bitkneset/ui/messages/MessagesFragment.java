@@ -1,23 +1,17 @@
 package com.danik.bitkneset.ui.messages;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,27 +26,17 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.danik.bitkneset.FirebaseHelper;
 import com.danik.bitkneset.FirebaseMessager;
 import com.danik.bitkneset.Message;
-import com.danik.bitkneset.Order;
 import com.danik.bitkneset.R;
-import com.danik.bitkneset.RVAdapter;
 import com.danik.bitkneset.RVMSGAdapter;
 import com.danik.bitkneset.ui.login.LoginFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 public class MessagesFragment extends Fragment {
 

@@ -1,21 +1,15 @@
 package com.danik.bitkneset;
 
-import android.media.Image;
 import android.os.Bundle;
-
-import com.danik.bitkneset.ui.login.LoginFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class RecoveryEngine extends AppCompatActivity {
     FirebaseHelper fbh;

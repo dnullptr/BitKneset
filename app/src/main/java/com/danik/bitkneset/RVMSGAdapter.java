@@ -2,7 +2,6 @@ package com.danik.bitkneset;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,21 +9,16 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.danik.bitkneset.ui.login.LoginFragment;
 import com.danik.bitkneset.ui.messages.MessagesFragment;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class RVMSGAdapter extends RecyclerView.Adapter<RVMSGAdapter.ViewHolder> implements Filterable {

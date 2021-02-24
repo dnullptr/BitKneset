@@ -2,8 +2,6 @@ package com.danik.bitkneset;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.danik.bitkneset.ui.aliyot.AliyotFragment;
 import com.danik.bitkneset.ui.login.LoginFragment;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

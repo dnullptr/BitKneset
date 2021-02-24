@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,22 +34,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.danik.bitkneset.FirebaseHelper;
-import com.danik.bitkneset.FirebaseRetriever;
 import com.danik.bitkneset.Order;
 import com.danik.bitkneset.R;
 import com.danik.bitkneset.RVAdapter;
+import com.danik.bitkneset.Toolbox;
 import com.danik.bitkneset.TrumahEngine;
 import com.danik.bitkneset.ui.login.LoginFragment;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 public class AliyotFragment extends Fragment {
 
@@ -123,7 +115,7 @@ public class AliyotFragment extends Fragment {
                     Toast.makeText(getContext(), "סכום ההזמנה אינו תקין", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (date.getText().length() < 1) {
+                if (!Toolbox.isDateValid(date.getText().toString())) {
                     Toast.makeText(getContext(), "תאריך אינו תקין", Toast.LENGTH_SHORT).show();
                     return;
                 }
