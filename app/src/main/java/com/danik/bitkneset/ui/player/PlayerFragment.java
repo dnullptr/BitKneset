@@ -3,24 +3,23 @@ package com.danik.bitkneset.ui.player;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
-import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.danik.bitkneset.FirebasePlayer;
 import com.danik.bitkneset.R;
 
 import org.jsoup.Jsoup;
@@ -268,15 +267,14 @@ public class PlayerFragment extends Fragment {
             try {
 
 
-                String urlHalaha = "http://halachayomit.co.il/he/default.aspx";
+                String urlHalaha = FirebasePlayer.halachaSiteUrl;
                 Document doc1 = Jsoup.connect(urlHalaha).get();
                 Elements data1 = doc1.select("#ctl00_ContentPlaceHolderMain_div_Mp3_2 > a");
                 HalahaTitle = doc1.select("#ctl00_ContentPlaceHolderMain_lblHalachaTitle").get(0).ownText();
-                String HalahaYomit = data1.get(0).outerHtml();
-                String uriToMp3Yomit = "http://halachayomit.co.il/he/" + HalahaYomit.substring(9, 37);
+               String HalahaYomit = data1.get(0).outerHtml();
+               String uriToMp3Yomit = ""+FirebasePlayer.halachaMP3Url; //replacing will make the site think i want to download , and provide mp3!!
+                Log.d(TAG, "doInBackground: "+uriToMp3Yomit);
 
-
-                Log.d(TAG, "doInBackground: " + HalahaTitle + "\n" + HalahaYomit + "\n" + uriToMp3Yomit);
 
                 mediaPlayer.setDataSource(uriToMp3Yomit);
                 mediaPlayer.prepare();

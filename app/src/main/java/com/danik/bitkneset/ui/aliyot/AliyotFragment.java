@@ -1,9 +1,11 @@
 package com.danik.bitkneset.ui.aliyot;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,7 +18,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -26,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -42,9 +47,10 @@ import com.danik.bitkneset.TrumahEngine;
 import com.danik.bitkneset.ui.login.LoginFragment;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class AliyotFragment extends Fragment {
+public class AliyotFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private AliyotViewModel aliyotViewModel;
     Button submitBtn;
@@ -57,6 +63,7 @@ public class AliyotFragment extends Fragment {
     RecyclerView.Adapter rvAdapter;
     RecyclerView.LayoutManager layoutManager;
     ProgressBar progressBarAliyot;
+    ImageButton datePickerBtn;
     final FirebaseHelper fbh = new FirebaseHelper("Orders"); //get fbh instance of orders or "aliyot" as i like to call them :)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +84,7 @@ public class AliyotFragment extends Fragment {
         spinner = root.findViewById(R.id.spinner);
         submitBtn = root.findViewById(R.id.submitOrder);
         progressBarAliyot = root.findViewById(R.id.progressBarAliyot);
+        datePickerBtn = root.findViewById(R.id.datePickerBtn);
         setHasOptionsMenu(true);
 
         if (LoginFragment.user != null)
@@ -150,6 +158,15 @@ public class AliyotFragment extends Fragment {
 
         spinner.setAdapter(new ArrayAdapter<String>(root.getContext(), R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.order_types)));
 
+        /////////////DATE PICKER BTN//////////////
+
+        datePickerBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                showDatePickerDia();
+            }
+        });
 
         progressBarAliyot.setVisibility(View.VISIBLE);
         progressBarAliyot.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
@@ -230,6 +247,23 @@ public class AliyotFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+        date.setText(Toolbox.buildDateFromInts(dayOfMonth,month+1,year)); //plus one since jan is 0
+    }
+
+    public void showDatePickerDia()
+    {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),this,year,month,day);
+        datePickerDialog.show();
     }
 
 

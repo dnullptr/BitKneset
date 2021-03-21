@@ -2,12 +2,12 @@ package com.danik.bitkneset.ui.home;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.view.animation.AnimationUtils;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.danik.bitkneset.FirebasePlayer;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,6 +26,7 @@ public class HomeViewModel extends ViewModel {
         HTMLBringMeInfo htmlBringMeInfo = new HTMLBringMeInfo();
         htmlBringMeInfo.execute();
         mText.setValue("אם אין חיבור - אין פרשה");
+        FirebasePlayer fbp = new FirebasePlayer("Halacha"); //new section to allow parsing halacha mp3 urls from my FB, not trusting the internet
     }
 
     public LiveData<String> getText() {

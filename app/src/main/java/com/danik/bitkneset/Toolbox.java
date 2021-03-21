@@ -21,6 +21,15 @@ public class Toolbox { //this class is a useful toolbox of functions that are go
 
     }
 
+    public static String buildDateFromInts(int dd,int mm,int yyyy)
+    {
+        String day,month,year;
+        day=""+(dd<10?"0"+dd:dd);
+        month=""+(mm<10?"0"+mm:mm);
+        year=""+yyyy;
+        return day+"/"+month+"/"+year;
+    }
+
     public static ArrayList<Bill> deDupeList(ArrayList<Bill> arr) //my custom func to de-duplicate lists that came to Adapters , usually this is the culprit on androidx..
     {
         for (int i = 0; i < arr.size(); i++) {
