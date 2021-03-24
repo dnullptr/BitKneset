@@ -25,6 +25,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.danik.bitkneset.FirebaseMessager;
 import com.danik.bitkneset.Message;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MessagesFragment extends Fragment {
+public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private MessagesViewModel messagesViewModel;
     public ImageButton sendBtn;
@@ -54,7 +55,7 @@ public class MessagesFragment extends Fragment {
     public TextView newMsg;
     public static Switch deleteMode;
     public FBBringMeMessages fbBringMeMessages = new FBBringMeMessages();
-
+    public SwipeRefreshLayout swipeRefreshLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -76,10 +77,13 @@ public class MessagesFragment extends Fragment {
         fabSend = root.findViewById(R.id.fabSend);
         deleteMode = root.findViewById(R.id.deletionSwitch);
         progressBarMessages = root.findViewById(R.id.progressBarMessages);
+        swipeRefreshLayout = root.findViewById(R.id.swipeRefresh);
         setHasOptionsMenu(true);
 
-
         fbm = new FirebaseMessager("Messages");
+
+        //////////SWIPE LISTENER AFTER IMPLEMENTING MYSELF AS ONE/////////
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         //////////FAB SEND FLOATING BUTTON///////////////
         fabSend.setOnClickListener(new View.OnClickListener() {
@@ -160,10 +164,15 @@ public class MessagesFragment extends Fragment {
 
             }
         });
-
         fbBringMeMessages.execute();
 
         return root;
+    }
+
+    @Override
+    public void onRefresh() { //as i implement SwipeRefresh i can call from wherever i want
+    rvmsgAdapter.notifyDataSetChanged();
+    swipeRefreshLayout.setRefreshing(false);
     }
 
 

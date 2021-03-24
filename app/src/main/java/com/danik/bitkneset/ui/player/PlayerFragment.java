@@ -1,6 +1,5 @@
 package com.danik.bitkneset.ui.player;
 
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.danik.bitkneset.FirebasePlayer;
+import com.danik.bitkneset.PlayerSingleton;
 import com.danik.bitkneset.R;
 
 import org.jsoup.Jsoup;
@@ -33,9 +33,8 @@ import static android.content.ContentValues.TAG;
 public class PlayerFragment extends Fragment {
 
     private PlayerViewModel playerViewModel;
-    public volatile MediaPlayer mediaPlayer; //the engine of media itself
-    Button playBtn, stopBtn;
-    ; //the ref to play button
+    public volatile PlayerSingleton mediaPlayer;; //the engine of media itself
+    Button playBtn, stopBtn; //the ref to play button
     TextView songName; //the ref to text of song name
     TextView timeText; //the ref to text of time
     SeekBar seekBar; //ref to seek bar in ui
@@ -44,6 +43,7 @@ public class PlayerFragment extends Fragment {
     Thread playThrd, playSeekThrd, stopThrd; //play threads to be used explicitly
     String HalahaTitle;
     ProgressBar progressBar;
+
 
     public View rootFinal;
 
@@ -60,21 +60,13 @@ public class PlayerFragment extends Fragment {
         progressBar = root.findViewById(R.id.progressBarPlayer);
 
         //Halaha Yomit Section
-        mediaPlayer = new MediaPlayer();
+        mediaPlayer = PlayerSingleton.getInstance();
         handler = new Handler();
         HTMLBringMeMedia htmlBringMeMedia = new HTMLBringMeMedia();
         htmlBringMeMedia.execute();
 
 
         /////////////////////////SEEK BAR ///////////////////////////////////////
-
-        root.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
-                    mediaPlayer.stop();
-            }
-        });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -209,6 +201,9 @@ public class PlayerFragment extends Fragment {
         String TAG = "Debug";
         Log.d(TAG, "PlayingEvents: HERE ");
 
+        if(PlayerSingleton.ping != null && PlayerSingleton.pong != null) //if i pong on 2nd time the ping is nulled again!
+             if(PlayerSingleton.pingPongSwitch == 2) {PlayerSingleton.ping.stop(); PlayerSingleton.ping = null;}
+
 
         if (mediaPlayer.isPlaying()) {
             runnable = new Runnable() {
@@ -260,9 +255,9 @@ public class PlayerFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            if(mediaPlayer != null)
-                if(mediaPlayer.isPlaying())
-                    mediaPlayer.release();
+            //if(mediaPlayer != null)
+                //if(mediaPlayer.isPlaying())
+                 //   mediaPlayer.release();
             String url = "https://www.hidabroot.org/%D7%9B%D7%A0%D7%99%D7%A1%D7%AA-%D7%94%D7%A9%D7%91%D7%AA";
             try {
 

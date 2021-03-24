@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipeRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bgbeitmsg"
     tools:context=".ui.messages.MessagesFragment">
+
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMsgs"
@@ -19,6 +27,10 @@
         app:layout_constraintHorizontal_bias="0.777"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
 
     <TextView
         android:id="@+id/text_slideshow"
@@ -53,7 +65,9 @@
         android:text="@string/newMsg"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvMsgs" />
+        app:layout_constraintTop_toBottomOf="@+id/rvMsgs"
+        tools:ignore="NotSibling" />
+
 
     <EditText
         android:id="@+id/messageEditText"
@@ -81,6 +95,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messageEditText" />
 
+
     <ProgressBar
         android:id="@+id/progressBarMessages"
         style="?android:attr/progressBarStyle"
@@ -104,3 +119,4 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
